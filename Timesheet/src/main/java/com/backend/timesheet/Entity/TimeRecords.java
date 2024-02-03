@@ -1,19 +1,24 @@
 package com.backend.timesheet.Entity;
+import jakarta.persistence.*;
+import lombok.*;
 
-import lombok.Getter;
-import lombok.Setter;
-
+import java.util.List;
 import java.util.SortedSet;
 import java.util.TreeSet;
 
 @Getter
 @Setter
+@NoArgsConstructor
+@AllArgsConstructor
+@Builder
+@Entity
 public class TimeRecords {
-    private SortedSet<TimeRecord> records;
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    private Long id;
+    @OneToMany(mappedBy = "timeRecords")
+    private List<TimeRecord> records;
 
-    public TimeRecords() {
-        this.records = new TreeSet<>();
-    }
 
     public void add(TimeRecord record) {
         if (!overlapsWithExistingRecord(record)) {

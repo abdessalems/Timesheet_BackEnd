@@ -1,20 +1,31 @@
 package com.backend.timesheet.Entity;
 
-import lombok.Getter;
-import lombok.Setter;
-
-import java.util.Collection;
-import java.util.SortedSet;
-import java.util.TreeSet;
-
+import jakarta.persistence.*;
+import lombok.*;
+import java.util.Set;
 @Getter
 @Setter
+@NoArgsConstructor
+@AllArgsConstructor
+@Builder
+@Entity
 public class Team {
-    private String name;
-    private SortedSet<Employee> employees;
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    private Long id;
 
-    public Team(String name, Collection<Employee> employees) {
-        this.name = name;
-        this.employees = new TreeSet<>(employees);
-    }
+    private String name;
+
+    @ManyToOne
+    @JoinColumn(name = "staff_register_id")
+    private StaffRegister staffRegister;
+
+    @ManyToMany(cascade = {CascadeType.PERSIST, CascadeType.MERGE})
+    @JoinTable(
+            name = "team_employee",
+            joinColumns = @JoinColumn(name = "team_id"),
+            inverseJoinColumns = @JoinColumn(name = "employee_id")
+    )
+    private Set<Employee> employees;
+
 }
